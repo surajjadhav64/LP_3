@@ -1,20 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Bank {
-    mapping(address => uint256) balances;
+contract StudentDB {
 
-    function depositMoney(uint256 amount) public {
-        require(amount > 0, "Amount must be greater than 0");
-        balances[msg.sender] = balances[msg.sender] + amount;
+    struct Student {
+        string name;
+        uint256 rollNo;
+        string class;
     }
 
-    function withdrawMoney(uint256 amount) public {
-        require(amount <= balances[msg.sender], "Insufficient Balance");
-        balances[msg.sender] = balances[msg.sender] - amount;
+    Student[] private students;
+
+    function addStudent(string memory name, uint256 rollNo, string memory class) public {
+        students.push(Student(name, rollNo, class));
     }
 
-    function showBalance() public view returns (uint256) {
-        return balances[msg.sender];
+    function getStudentById(uint256 id) public view returns(string memory name, uint256 rollNo, string memory class) {
+        require(id < students.length, "Student does not exist in database");
+        return (students[id].name, students[id].rollNo, students[id].class);
+    }
+
+    function getTotalNumberOfStudents() public view returns(uint256) {
+        return students.length;
     }
 }
